@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://330ap5wmslqo"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gr1cl"]
+
+[node name="rightLaneWall" type="Node3D"]
+transform = Transform3D(1.00382, 0, 0, 0, 1.00382, 0, 0, 0, 1.00382, 0, 0, 0)
+
+[node name="rightLaneWall" type="MeshInstance3D" parent="."]
+transform = Transform3D(-8.73388e-08, -0.999039, 0, 1.99808, -4.36694e-08, 0, 0, 0, 99.9039, 3, 2, 0)
+mesh = SubResource("PlaneMesh_gr1cl")

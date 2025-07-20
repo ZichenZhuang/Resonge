@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://vhsee2x2jb4a"]
+
+[ext_resource type="Script" uid="uid://bro2edv7gxhoy" path="res://note_spawner.gd" id="1_muerd"]
+[ext_resource type="PackedScene" uid="uid://door1tli1a7gb" path="res://notehit.tscn" id="2_wb00y"]
+[ext_resource type="PackedScene" uid="uid://ds7s5bh28kj0u" path="res://NoteHold.tscn" id="3_sd6nr"]
+
+[node name="noteSpawner" type="Node3D"]
+script = ExtResource("1_muerd")
+tap_scene = ExtResource("2_wb00y")
+hold_scene = ExtResource("3_sd6nr")
+lane_spawns = Array[NodePath]([NodePath("lane1"), NodePath("lane2"), NodePath("lane3"), NodePath("lane4"), NodePath("lane5"), NodePath("lane6")])
+
+[node name="lane1" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 0.001, 0)
+
+[node name="lane2" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0.001, 0)
+
+[node name="lane3" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.001, 0)
+
+[node name="lane4" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.001, 0)
+
+[node name="lane5" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.001, 0)
+
+[node name="lane6" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0.001, 0)

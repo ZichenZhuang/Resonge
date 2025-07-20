@@ -1,0 +1,19 @@
+[gd_scene load_steps=3 format=3 uid="uid://biijyqqkrwnyd"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jnrlp"]
+albedo_color = Color(0, 0, 0, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_foxhm"]
+
+[node name="laneNode" type="Node3D"]
+
+[node name="lane" type="MeshInstance3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 2, 0, 0, 0, 24, 0, 0, -6)
+material_override = SubResource("StandardMaterial3D_jnrlp")
+mesh = SubResource("PlaneMesh_foxhm")
+
+[node name="camera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.753254, 0.65773, 0, -0.65773, 0.753254, 0, 3.50332, 0.719476)
+current = true
+fov = 70.0
+near = 0.001

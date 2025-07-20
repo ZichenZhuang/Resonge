@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://dls11gpawq8eh"]
+
+[ext_resource type="PackedScene" uid="uid://vhsee2x2jb4a" path="res://note_spawner.tscn" id="1_n2kah"]
+[ext_resource type="PackedScene" uid="uid://c8u23lbtd6uvh" path="res://road.tscn" id="2_1snxi"]
+[ext_resource type="PackedScene" uid="uid://udkf6os7iva8" path="res://background_sprite.tscn" id="2_lxr2e"]
+
+[node name="Game" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -18)
+
+[node name="noteSpawner" parent="." instance=ExtResource("1_n2kah")]
+transform = Transform3D(1, 0, 0, 0, 0.596015, 0.802974, 0, -0.802974, 0.596015, 0, 0, 4.63061)
+note_travel_time = 17
+
+[node name="laneNode" parent="." instance=ExtResource("2_1snxi")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.00428772)
+
+[node name="backgroundSprite" parent="." instance=ExtResource("2_lxr2e")]
+transform = Transform3D(1, 0, 0, 0, 0.596015, 0.802974, 0, -0.802974, 0.596015, 0, 0, 4.63061)
