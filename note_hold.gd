@@ -9,7 +9,7 @@ var lane: int = 1
 const HIT_ZONE_Z = 0.0
 const PERFECT_WIN = 1.0
 const GREAT_WIN   = 2.0
-const PORTAL_Z    = 17.0	# anything beyond this is cropped on hold
+const PORTAL_Z    = -1.1	# anything beyond this is cropped on hold
 
 var state: String = "idle"		# idle → holding → ready_to_release → done / missed
 var hittable: bool = false
@@ -23,50 +23,79 @@ func _ready() -> void:
 	add_to_group("notes")
 	_build_tail_mesh()
 
+	# Lower spawn position by 1 unit on Z-axis (or adjust as needed)
+	var pos = global_transform.origin
+	global_transform.origin = pos
+
+var freeze_movement: bool = false  # add at class level
+
 func _process(delta: float) -> void:
 	match state:
 		"idle":
-			translate(Vector3(0, 0, 1) * speed * delta)
-			_update_head_hittable()
-			if global_transform.origin.z > HIT_ZONE_Z + GREAT_WIN + 1.0:
-				state = "missed"
-				print("🔴 Missed HOLD note lane", lane)
+			if freeze_movement:
+				print("DEBUG idle pos.z =", global_transform.origin.z)
+			else:
+				translate(Vector3(0, 0, 1) * speed * delta)
+				_update_head_hittable()
+				
+			# Print local and global Z positions for debugging
+			print("Local Z:", transform.origin.z, " | Global Z:", global_transform.origin.z)
+		
 		"holding", "ready_to_release":
-			# Lock head position at lock_z
 			var pos = global_transform.origin
 			pos.z = lock_z
 			global_transform.origin = pos
-			
+
 			_update_tail_shrink()
 			if state == "holding":
 				hold_clock += delta
+				var ms = delta * 1000.0
+				score_counter.add_score(int(50 * ms))
 				if hold_clock >= duration:
 					state = "ready_to_release"
 					print("🟢 Hold duration complete – release key lane", lane)
+
+			if tail_mesh and is_instance_valid(tail_mesh):
+				var tail_global_z = tail_mesh.global_transform.origin.z + (tail_mesh.mesh.size.z * 0.5)
+				if tail_global_z > 18.0:
+					print("🧹 Tail passed z=18.0 – deleting hold note lane", lane)
+					queue_free()
+
+			# Also print local and global Z here for debugging
+			print("Local Z:", transform.origin.z, " | Global Z:", global_transform.origin.z)
+
 		"done", "missed":
 			queue_free()
+
 
 func start_hold() -> void:
 	if state != "idle":
 		return
 
-	lock_z = global_transform.origin.z  # current head position
+	var current_z := global_transform.origin.z
+	var overrun = max(current_z - PORTAL_Z, 0.0) # how much we passed the portal
 
-	if lock_z > PORTAL_Z:
-		# User tapped late, trim tail immediately
-		var overrun: float = lock_z - PORTAL_Z
+	# Snap head to PORTAL_Z regardless of early/late
+	lock_z = PORTAL_Z
+	var pos := global_transform.origin
+	pos.z = PORTAL_Z
+	global_transform.origin = pos
+
+	# Tail trimming only if we're late
+	if overrun > 0.0:
 		_trim_tail(overrun)
-
-		# Preload hold_clock to the corresponding elapsed time (clamped)
-		var elapsed_time: float = min(overrun / speed, duration)
-		hold_clock = elapsed_time
-
-		print("⏳ Late tap: trimming tail for overrun", overrun)
+		hold_clock = min(overrun / speed, duration)
+		print("⏪ Late tap – trimming tail by", overrun)
 	else:
 		hold_clock = 0.0
+		print("⏩ Early tap – no tail trim")
 
+	# Freeze movement for debugging
+	freeze_movement = true
 	state = "holding"
+
 	print("⏳ Holding… lane", lane, "remain", str(duration - hold_clock), "s")
+
 
 func end_hold() -> void:
 	if state == "holding":
@@ -99,12 +128,18 @@ func _build_tail_mesh() -> void:
 	box.size = Vector3(0.8, 0.1, speed * duration)
 	tail_mesh.mesh = box
 
-	# Bright white unlit material with emission
 	var mat := StandardMaterial3D.new()
+	mat.depth_draw_mode = 2  # DEPTH_DRAW_NEVER
+	mat.depth_test = false
 	mat.albedo_color = Color(1, 1, 1)
 	mat.emission_enabled = true
 	mat.emission = Color(1, 1, 1)
 	mat.flags_unshaded = true
+
+	# THIS MAKES IT 'NO DEPTH' — renders on top, no depth write/test
+	mat.depth_draw_mode = 2  # DEPTH_DRAW_NEVER
+	mat.depth_test = false
+	mat.render_priority = 100
 	tail_mesh.material_override = mat
 
 	tail_mesh.position = Vector3(0, 0, -box.size.z * 0.5)
@@ -113,15 +148,22 @@ func _build_tail_mesh() -> void:
 func _trim_tail(overrun_dist: float) -> void:
 	if not tail_mesh:
 		return
+
 	var old_box: BoxMesh = tail_mesh.mesh as BoxMesh
-	var new_len: float = max(old_box.size.z - overrun_dist, 0.01)
+	var old_len: float = old_box.size.z
+	var new_len: float = max(old_len - overrun_dist, 0.01)
 
-	# Create a new BoxMesh with updated size
-	var new_box := BoxMesh.new()
+	var new_box: BoxMesh = BoxMesh.new()
 	new_box.size = Vector3(old_box.size.x, old_box.size.y, new_len)
-
 	tail_mesh.mesh = new_box
-	tail_mesh.position = Vector3(0, 0, -new_len * 0.5)
+
+	var shift_z: float = overrun_dist + (new_len * 0.5)
+	tail_mesh.position = Vector3(0, 0, -shift_z)
+
+	print("DEBUG _trim_tail: overrun =", overrun_dist,
+		  " old_len =", old_len,
+		  " new_len =", new_len,
+		  " shift_z =", shift_z)
 
 func _update_tail_shrink() -> void:
 	if not tail_mesh:

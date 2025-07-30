@@ -16,7 +16,7 @@ func _ready():
 
 func _process(delta):
 	translate(Vector3(0, 0, 1) * speed * delta)
-
+	print("Global position:", global_transform.origin)
 	var z_pos = global_transform.origin.z
 	var dist = abs(z_pos - HIT_ZONE_Z)
 

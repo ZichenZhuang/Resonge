@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://c24bit3otsoci"]
+
+[ext_resource type="Script" uid="uid://cfacy6k3fdam3" path="res://notetrace.gd" id="1_l61sg"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_l61sg"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_l61sg"]
+render_priority = 100
+depth_draw_mode = 1
+no_depth_test = true
+albedo_color = Color(0.359315, 0.719735, 1, 1)
+emission_enabled = true
+emission = Color(0.598717, 0.900611, 1, 1)
+emission_energy_multiplier = 0.9
+
+[node name="notetrace" type="Node3D"]
+transform = Transform3D(0.999848, 0, 0.0174524, 0, 1, 0, -0.0174524, 0, 0.999848, 0, 0, 0)
+script = ExtResource("1_l61sg")
+
+[node name="head" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.01, 0, 0, 0, 0.05, 0, 0.01, 1)
+mesh = SubResource("PlaneMesh_l61sg")
+skeleton = NodePath("")
+surface_material_override/0 = SubResource("StandardMaterial3D_l61sg")

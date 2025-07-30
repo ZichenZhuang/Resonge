@@ -78,10 +78,9 @@ func _try_hit_note():
 var active_hold_notes := {}  # lane → NoteHold
 
 func _handle_press(lane:int):
-	print("Pressed lane", lane)
+	#print("Pressed lane", lane)
 	var note = _nearest_hittable_note(lane)
 	if note == null:
-		print("No hittable note found on lane", lane)
 		return
 
 	if note is NoteHold:
@@ -123,10 +122,11 @@ func _score_and_kill(note: Node3D) -> void:
 	if "hit_quality" in note and note.hit_quality != "":
 		match note.hit_quality:
 			"perfect":
-				points += 2
+				score_counter.add_score(100)
 				print("✅ PERFECT tap hit!")
+				
 			"great":
-				points += 1
+				score_counter.add_score(50)
 				print("👍 GREAT tap hit!")
 			_:
 				print("Hit note with unknown quality")

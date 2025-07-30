@@ -4,10 +4,13 @@
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_qmtua"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rk6u6"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0bhkl"]
+render_priority = 100
+depth_draw_mode = 2
+no_depth_test = true
 emission_enabled = true
 emission = Color(1, 1, 1, 1)
-emission_energy_multiplier = 5.0
+emission_energy_multiplier = 4.85
 
 [node name="note" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00174715, 0, 5.65648e-05)
@@ -15,5 +18,6 @@ script = ExtResource("1_jpq1d")
 
 [node name="head" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.5, 0, 0, 0, 1, 0, 0, 0, 0.1, 0, 0.001, 0)
+gi_lightmap_texel_scale = 1.001
 mesh = SubResource("PlaneMesh_qmtua")
-surface_material_override/0 = SubResource("StandardMaterial3D_rk6u6")
+surface_material_override/0 = SubResource("StandardMaterial3D_0bhkl")

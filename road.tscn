@@ -1,18 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://c8u23lbtd6uvh"]
+[gd_scene load_steps=6 format=3 uid="uid://c8u23lbtd6uvh"]
 
 [ext_resource type="PackedScene" uid="uid://r3j7ogpjsfbx" path="res://notepicker.tscn" id="1_61i5q"]
 [ext_resource type="Script" uid="uid://ntkgadhyykk5" path="res://road.gd" id="1_o7w4r"]
 [ext_resource type="Script" uid="uid://hfpgvdxwaoqk" path="res://mesh_instance_3d.gd" id="2_olra3"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jnrlp"]
+transparency = 1
+depth_draw_mode = 2
+no_depth_test = true
 albedo_color = Color(0, 0, 0, 1)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_foxhm"]
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xggit"]
-transparency = 1
-proximity_fade_enabled = true
-proximity_fade_distance = 0.5
 
 [node name="laneNode" type="Node3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -18)
@@ -25,14 +23,14 @@ script = ExtResource("2_olra3")
 [node name="lane" type="MeshInstance3D" parent="."]
 transform = Transform3D(3, 0, 0, 0, 2, 0, 0, 0, 8, 0, 0, 10)
 material_override = SubResource("StandardMaterial3D_jnrlp")
-transparency = 0.3
+transparency = 0.05
+cast_shadow = 0
 mesh = SubResource("PlaneMesh_foxhm")
-surface_material_override/0 = SubResource("StandardMaterial3D_xggit")
 
 [node name="camera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.722473, 0.691399, 0, -0.691399, 0.722473, 0, 3.50332, 18.6794)
+transform = Transform3D(1, 0, 0, 0, 0.702079, 0.712099, 0, -0.712099, 0.702079, 0, 5.0083, 18.6794)
 current = true
-fov = 70.0
+fov = 69.8477
 near = 0.001
 
 [node name="notepicker1" parent="." instance=ExtResource("1_61i5q")]
